@@ -13,19 +13,20 @@ from random import sample, shuffle                    # randomize conditions and
 ##########################
 
 def show_text(text):
-    visual.TextStim(win, text, pos = (0,0)).draw()  #Preperation of a text stimuli
-    win.flip()                                      #start presentation - win is a name of screen; flip brings drawn stimuli onto the screen
+    visual.TextStim(win, text, pos = (0,0)).draw()  # Preperation of a text stimuli
+    win.flip()                                      # start presentation - win is a name of screen; flip brings drawn stimuli onto the screen
     event.waitKeys(keyList = ["return"])
-    core.wait(10)
+    win.flip()                                      # empty frame for buffer after confirming
+    core.wait(0.8)                                  # time for buffer
 
 def code_generator(msg):
     chars = []
     visual.TextStim(win, msg, pos=(0, -200)).draw()
     win.flip()
-    while True:
+    while True:                                                 # loop stays always TRUE - must escape via break
         key = event.waitKeys()[0].lower()
         if key == "return":
-            if len(chars) == 6:
+            if len(chars) == 6:                                 # enter only breaks, if code is complete
                 break
         elif key in "abcdefghijklmnopqrstuvwxyz0123456789":
             if len(chars)<6:
@@ -33,29 +34,32 @@ def code_generator(msg):
         elif key == "backspace":
             chars = chars[:-1]
         code="".join(chars)
-        visual.TextStim(win, code.upper()).draw()
+        visual.TextStim(win, code.upper()).draw()               # redraw text stimuli to show user input on frame
         visual.TextStim(win, msg, pos=(0, -200)).draw()
         win.flip()
     win.flip()
     return code
 
-def fixation_phase():
+def fixation_preparation_phase(stim, dict_key):
     fixation = visual.Circle(win, size = 5,lineColor = 'white', fillColor = 'lightGrey').draw()
-    win.flip()
-    core.wait(1)
+    win.flip()  # Show prepared fixation object
+    clock.reset()
+    while clock.getTime() < 1.5:
+        if "st" in dict_key:
+            imgzoomin = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1400,970))
+            imgzoomout = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1000,630))
+            img = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1200, 800))
+            img.draw()
+        if "ti" in dict_key:
+            imgzoomin = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1400,970))
+            imgzoomout = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1000,630))
+            img = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1200, 800))
+            img.draw()
+    return img, imgzoomin, imgzoomout
 
 
 def practice(stim, dict_key, condition):
-    fixation_phase()
-    if "st" in dict_key:
-        imgzoomin = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1400,970))
-        imgzoomout = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1000,630))
-        img = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1200, 800))
-    if "ti" in dict_key:
-        imgzoomin = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1400,970))
-        imgzoomout = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1000,630))
-        img = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1200, 800))
-    img.draw()
+    img, imgzoomin, imgzoomout = fixation_preparation_phase(stim = stim, dict_key = dict_key)
     win.flip()
     key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
     if key == "w":
@@ -63,7 +67,7 @@ def practice(stim, dict_key, condition):
     if key == "s":
         imgzoomout.draw()
     win.flip()
-    event.waitKeys(keyList=("return"))
+    event.waitKeys(keyList=("return"), maxWait = 1.5)
     if condition == "straightapproach":
         if (key == "w" and "st" in dict_key) or (key =="s" and "ti" in dict_key):
             show_text(text = feedback.format("korrekt"))
@@ -76,17 +80,8 @@ def practice(stim, dict_key, condition):
             show_text(text = feedback.format("korrekt"))
 
 
-def trial(stim, reference_dict_key, condition):
-    fixation_phase()
-    if "st" in reference_dict_key:
-        imgzoomin = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1400,970))
-        imgzoomout = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1000,630))
-        img = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1200, 800))
-    if "ti" in reference_dict_key:
-        imgzoomin = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1400,970))
-        imgzoomout = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1000,630))
-        img = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1200, 800))
-    img.draw()
+def trial(stim, dict_key, condition):
+    img, imgzoomin, imgzoomout = fixation_preparation_phase(stim = stim, dict_key = dict_key)
     win.callOnFlip(clock.reset)
     win.flip()
     key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
@@ -96,12 +91,12 @@ def trial(stim, reference_dict_key, condition):
         imgzoomout.draw()
     win.flip()
     with open(filename, "a") as f:
-        print(reference_dict_key,stim,key,rt,condition,subject_ID, sep=",", file=f)
+        print(dict_key,stim,key,rt,condition,subject_ID, sep=",", file=f)
     event.waitKeys(keyList=("return"), maxWait = 1.5)
 
 
 #######################
-#### Text elements ####
+#### TEXT ELEMENTS ####
 #######################
 
 welcome = """Willkommen zu unserem Experiment!
@@ -124,19 +119,20 @@ Drücken Sie ENTER, um fortzufahren...
 
 approach_practice = """
 Im Folgendenen werden ihnen Trainingsdurchgänge präsentiert.
-Wenn das Bild {} ist, sollen Sie sich annähern. Dies erreichen Sie durch Drücken der Taste W.
-Wenn das Bild hingegen {} ist, sollen Sie sich entfernen. Dies erreichen Sie durch Drücken der Taste S.
-Antworten Sie so schnell und genau wie möglich. Sowohl die Korrrektheit als auch die Reaktionszeit werden gemessen.
-In den Trainingsdurchgängen erhalten Sie Feedback zu Ihrer Antwort.
-Mit ENTER können Sie Text weiterschalten.
+
+Wenn das Bild {} ist, sollen Sie sich annähern. Dies erreichen Sie durch Drücken der Taste W. Wenn das Bild hingegen {} ist, sollen Sie sich entfernen. Dies erreichen Sie durch Drücken der Taste S.
+
+Antworten Sie so schnell und genau wie möglich. Sowohl die Korrrektheit als auch die Reaktionszeit werden gemessen. In den Trainingsdurchgängen erhalten Sie Feedback zu Ihrer Antwort.
+
 
 Drücken Sie ENTER um beginnen...
 """
 
 approach_trials = """
 Die Trainingsdurchgänge sind geschafft. Nun geht es in die Testphase.
-Denken Sie daran, dass sie gelernt haben, dass sie sich annähern sollen, wenn das Bild {} ist. Dies erreichen Sie durch Drücken der Taste W.
-Wenn das Bild hingegen {} ist, sollen Sie sich entfernen. Dies erreichen Sie durch Drücken der Taste S.
+
+Denken Sie daran, dass sie gelernt haben, dass sie sich annähern sollen, wenn das Bild {} ist. Dies erreichen Sie durch Drücken der Taste W. Wenn das Bild hingegen {} ist, sollen Sie sich entfernen. Dies erreichen Sie durch Drücken der Taste S.
+
 Sie werden in dieser Phase kein Feedback zu Ihren Antworten erhalten. Das nächste Bild wird also automatisch erscheinen!
 
 Drücken Sie ENTER um beginnen...
@@ -156,9 +152,9 @@ Vielen Dank für Ihre Teilnahme. Beenden Sie das Programm und informieren Sie di
 Drücken Sie ENTER zum Beenden...
 """
 
-#######################
-#### Text elements ####
-#######################
+####################################################################
+#### RANDOMIZE PRACTICE AND TRIAL IMAGES TO BE TILT OR STRAIGHT ####
+####################################################################
 
 os.chdir('./stimuli')
 
@@ -220,15 +216,15 @@ clock = core.Clock() #stopwatch
 #### DETERMINE ORDER, SHOW INSTRUCTIONS AND SET UP FILE ----
 
 conditions = ["straightapproach", "tiltapproach"]
-shuffle(conditions)
+shuffle(conditions)                                                       # randomize order of condtions
 
 show_text(welcome)
 
 subject_ID = code_generator(msg = code_generation)
 
 filename = "subject_" + subject_ID + ".csv"
-with open(filename, "w") as f:
-    print("alignment,stim_name,pressed_key,rt,align_condition,subject_ID", file = f)
+with open(filename, "w") as f:                                                              # set up file for data
+    print("alignment,stim_name,pressed_key,rt,align_condition,subject_ID", file = f)        # first row will function as header later
 
 #### FIRST CONDITION ----
 
@@ -247,7 +243,7 @@ else:
         show_text(text = approach_trials.format("schief", "gerade"))
 
 for single_stim in stimuli_order:
-    trial(stim = reference_dict.get(single_stim), reference_dict_key = single_stim,
+    trial(stim = reference_dict.get(single_stim), dict_key = single_stim,
     condition = conditions[0])
 
 #### SECOND CONDITION ----
@@ -272,7 +268,7 @@ else:
         show_text(text = approach_trials.format("schief", "gerade"))
 
 for single_stim in stimuli_order:
-    trial(stim = reference_dict.get(single_stim), reference_dict_key = single_stim,
+    trial(stim = reference_dict.get(single_stim), dict_key = single_stim,
     condition = conditions[1])
 
 #### MOVE DATA AND END EXPERIMENT ----
