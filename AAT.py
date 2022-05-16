@@ -2,14 +2,21 @@
 #### Import functions ####
 ##########################
 
-import os # for path functions
-from psychopy import visual, monitors, event, core    # type: ignore
-from random import sample, shuffle
-from shutil import move
+import os                                             # for path functions
+from shutil import move                               # for path function
+from psychopy import visual, monitors, event, core    # type: ignore # important functions for conducting experiments
+from random import sample, shuffle                    # randomize conditions and stimuli
+
 
 ###########################
 #### Define functions ####
 ##########################
+
+def show_text(text):
+    visual.TextStim(win, text, pos = (0,0)).draw()  #Preperation of a text stimuli
+    win.flip()                                      #start presentation - win is a name of screen; flip brings drawn stimuli onto the screen
+    event.waitKeys(keyList = ["return"])
+    core.wait(10)
 
 def code_generator(msg):
     chars = []
@@ -31,17 +38,6 @@ def code_generator(msg):
         win.flip()
     win.flip()
     return code
-
-def show_text(text):
-    visual.TextStim(win, text, pos = (0,0)).draw() # Vorbereitung Anzeige Instruktionen, #Vorbereitung auf Darstellung
-    win.flip() #Übergang zur Anzeige Instruktionen, #Anzeige, win weil unser Fenster so heißt; flip ist der Befehl, um das gedrawte auf win zu setzen
-    event.waitKeys(keyList = ["return"]) #Warten auf Knopfdruck
-    win.flip()
-    core.wait(2)
-
-def prepare_text(text):
-    visual.TextStim(win, text, pos = (0,0)).draw() # Vorbereitung Anzeige Instruktionen, #Vorbereitung auf Darstellung
-
 
 def fixation_phase():
     fixation = visual.Circle(win, size = 5,lineColor = 'white', fillColor = 'lightGrey').draw()
@@ -70,16 +66,14 @@ def practice(stim, dict_key, condition):
     event.waitKeys(keyList=("return"))
     if condition == "straightapproach":
         if (key == "w" and "st" in dict_key) or (key =="s" and "ti" in dict_key):
-            prepare_text(text = feedback.format("korrekt"))
+            show_text(text = feedback.format("korrekt"))
         else:
-            prepare_text(text = feedback.format("nicht korrekt"))
+            show_text(text = feedback.format("nicht korrekt"))
     else:
         if (key == "w" and "st" in dict_key) or (key =="s" and "ti" in dict_key):
-            prepare_text(text = feedback.format("nicht korrekt"))
+            show_text(text = feedback.format("nicht korrekt"))
         else:
-            prepare_text(text = feedback.format("korrekt"))
-    win.flip()
-    event.waitKeys(keyList=("return"), maxWait = 4)
+            show_text(text = feedback.format("korrekt"))
 
 
 def trial(stim, reference_dict_key, condition):
@@ -93,7 +87,7 @@ def trial(stim, reference_dict_key, condition):
         imgzoomout = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1000,630))
         img = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1200, 800))
     img.draw()
-    win.callOnFlip(clock.reset)#should work?
+    win.callOnFlip(clock.reset)
     win.flip()
     key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
     if key == "w":
@@ -103,7 +97,7 @@ def trial(stim, reference_dict_key, condition):
     win.flip()
     with open(filename, "a") as f:
         print(reference_dict_key,stim,key,rt,condition,subject_ID, sep=",", file=f)
-    event.waitKeys(keyList=("return"), maxWait = 4)
+    event.waitKeys(keyList=("return"), maxWait = 1.5)
 
 
 #######################
@@ -130,24 +124,28 @@ Drücken Sie ENTER, um fortzufahren...
 
 approach_practice = """
 Im Folgendenen werden ihnen Trainingsdurchgänge präsentiert.
-Wenn das Bild {} ist, sollen Sie sich annähern.
-Dies erreichen Sie durch Drücken der Taste W.
-Wenn das Bild hingegen {} ist, sollen Sie sich entfernen.
-Dies erreichen Sie durch Drücken der Taste S.
+Wenn das Bild {} ist, sollen Sie sich annähern. Dies erreichen Sie durch Drücken der Taste W.
+Wenn das Bild hingegen {} ist, sollen Sie sich entfernen. Dies erreichen Sie durch Drücken der Taste S.
 Antworten Sie so schnell und genau wie möglich. Sowohl die Korrrektheit als auch die Reaktionszeit werden gemessen.
 In den Trainingsdurchgängen erhalten Sie Feedback zu Ihrer Antwort.
 Mit ENTER können Sie Text weiterschalten.
 
-Drücken Sie ENTER um fortzufahren...
+Drücken Sie ENTER um beginnen...
 """
 
 approach_trials = """
 Die Trainingsdurchgänge sind geschafft. Nun geht es in die Testphase.
-Denken Sie daran, dass sie gelernt haben, dass sie sich annähern sollen, wenn das Bild {} ist.
-Dies erreichen Sie durch Drücken der Taste W.
-Wenn das Bild hingegen {} ist, sollen Sie sich entfernen.
-Dies erreichen Sie durch Drücken der Taste S.
+Denken Sie daran, dass sie gelernt haben, dass sie sich annähern sollen, wenn das Bild {} ist. Dies erreichen Sie durch Drücken der Taste W.
+Wenn das Bild hingegen {} ist, sollen Sie sich entfernen. Dies erreichen Sie durch Drücken der Taste S.
 Sie werden in dieser Phase kein Feedback zu Ihren Antworten erhalten. Das nächste Bild wird also automatisch erscheinen!
+
+Drücken Sie ENTER um beginnen...
+"""
+
+intermediate = """
+Der erste Durchgang ist geschafft. Nehmen Sie sich einen Moment Zeit und einen Schluck Wasser.
+
+Wenn Sie bereit sind, starten Sie in den zweiten Durchgang. In diesem sollen Sie auf die visuellen Stimuli die entgegengesetzte Reaktion zeigen.
 
 Drücken Sie ENTER um fortzufahren...
 """
@@ -219,12 +217,20 @@ clock = core.Clock() #stopwatch
 ##-#-#-# START EXPERIMENTAL PROCEDURE  #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 ##-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 
+#### DETERMINE ORDER, SHOW INSTRUCTIONS AND SET UP FILE ----
+
 conditions = ["straightapproach", "tiltapproach"]
 shuffle(conditions)
 
 show_text(welcome)
 
 subject_ID = code_generator(msg = code_generation)
+
+filename = "subject_" + subject_ID + ".csv"
+with open(filename, "w") as f:
+    print("alignment,stim_name,pressed_key,rt,align_condition,subject_ID", file = f)
+
+#### FIRST CONDITION ----
 
 if conditions[0] == "straightapproach":
         show_text(text = approach_practice.format("gerade", "schief"))
@@ -235,10 +241,6 @@ for single_stim in practice_order:
     practice(stim = practice_dict.get(single_stim), dict_key = single_stim,
             condition = conditions[0])
 
-filename = "subject_" + subject_ID + ".csv"
-with open(filename, "w") as f:
-    print("alignment,stim_name,pressed_key,rt,align_condition,subject_ID", file = f)
-
 if conditions[0] == "straightapproach":
         show_text(text = approach_trials.format("gerade", "schief"))
 else:
@@ -248,6 +250,32 @@ for single_stim in stimuli_order:
     trial(stim = reference_dict.get(single_stim), reference_dict_key = single_stim,
     condition = conditions[0])
 
+#### SECOND CONDITION ----
+
+show_text(intermediate)
+
+shuffle(practice_order)
+shuffle(stimuli_order)
+
+if conditions[1] == "straightapproach":
+        show_text(text = approach_practice.format("gerade", "schief"))
+else:
+        show_text(text = approach_practice.format("schief", "gerade"))
+
+for single_stim in practice_order:
+    practice(stim = practice_dict.get(single_stim), dict_key = single_stim,
+            condition = conditions[1])
+
+if conditions[1] == "straightapproach":
+        show_text(text = approach_trials.format("gerade", "schief"))
+else:
+        show_text(text = approach_trials.format("schief", "gerade"))
+
+for single_stim in stimuli_order:
+    trial(stim = reference_dict.get(single_stim), reference_dict_key = single_stim,
+    condition = conditions[1])
+
+#### MOVE DATA AND END EXPERIMENT ----
 
 origin = "subject_" + subject_ID + ".csv"
 destination = ("../data")
