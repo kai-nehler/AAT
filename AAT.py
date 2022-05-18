@@ -44,17 +44,21 @@ def fixation_preparation_phase(stim, dict_key):
     fixation = visual.Circle(win, size = 5,lineColor = 'white', fillColor = 'lightGrey').draw()
     win.flip()  # Show prepared fixation object
     clock.reset()
-    while clock.getTime() < 1.5:
-        if "st" in dict_key:
-            imgzoomin = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1400,970))
-            imgzoomout = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1000,630))
-            img = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1200, 800))
-            img.draw()
-        if "ti" in dict_key:
-            imgzoomin = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1400,970))
-            imgzoomout = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1000,630))
-            img = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1200, 800))
-            img.draw()
+    if "st" in dict_key:
+        imgzoomin = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1400,970))
+        imgzoomout = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1000,630))
+        img = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1200, 800))
+        img.draw()
+    if "ti" in dict_key:
+        imgzoomin = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1400,970))
+        imgzoomout = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1000,630))
+        img = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1200, 800))
+        img.draw()
+    while True:                         # check timing after preperation of stimulie
+        if clock.getTime() <= 1.5:      # preperation should take less than this time
+            pass
+        else:
+            break
     return img, imgzoomin, imgzoomout
 
 
