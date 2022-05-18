@@ -51,9 +51,9 @@ def fixation_preparation_phase(stim, dict_key):
         img = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1200, 800))
         img.draw()
     if "ti" in dict_key:
-        imgzoomin = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1400,970))
-        imgzoomout = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1000,630))
-        img = visual.ImageStim(win, ori = 10, image = stim, pos = (0, 0), size = (1200, 800))
+        imgzoomin = visual.ImageStim(win, ori = 1, image = stim, pos = (0, 0), size = (1400,970))
+        imgzoomout = visual.ImageStim(win, ori = 1, image = stim, pos = (0, 0), size = (1000,630))
+        img = visual.ImageStim(win, ori = 1, image = stim, pos = (0, 0), size = (1200, 800))
         img.draw()
     while True:                         # check timing after preperation of stimulie
         if clock.getTime() <= 1.5:      # preperation should take less than this time
@@ -180,10 +180,10 @@ neg_image_array = []
 neutral_image_array = []
 practice_image_array = []
 
-for i in range(1,7):
+for i in range(1,8):
     practice_image_array.append("practice" + str(i)+ ".jpg")
 
-for i in range(1,24):
+for i in range(1,25):
     neg_image_array.append("internet" + str(i)+ ".jpg")
     neutral_image_array.append("neutral" + str(i)+ ".jpg")
 
@@ -196,7 +196,7 @@ straight = list(set(neutral_image_array).difference(tilt))
 straight.extend(set(neg_image_array).difference(tilt))
 
 practice_dict = {}
-for i in range (0,3):
+for i in range (0,4):
   practice_dict_key = "st" + str(i+1)
   practice_dict[practice_dict_key] = straight_practice[i]
 for i in range (0,3):
@@ -207,10 +207,10 @@ practice_order = list(iter(practice_dict))
 shuffle(practice_order)
 
 reference_dict = {}
-for i in range (0,23):
+for i in range (0,24):
   reference_dict_key = "st" + str(i+1)
   reference_dict[reference_dict_key] = straight[i]
-for i in range (0,23):
+for i in range (0,24):
   reference_dict_key = "ti" + str(i+1)
   reference_dict[reference_dict_key] = tilt[i]
 
