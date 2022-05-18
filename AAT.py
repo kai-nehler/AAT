@@ -44,6 +44,7 @@ def fixation_preparation_phase(stim, dict_key):
     fixation = visual.Circle(win, size = 5,lineColor = 'white', fillColor = 'lightGrey').draw()
     win.flip()  # Show prepared fixation object
     clock.reset()
+    #clock_two.reset() #Timing Testing
     if "st" in dict_key:
         imgzoomin = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1400,970))
         imgzoomout = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1000,630))
@@ -64,7 +65,9 @@ def fixation_preparation_phase(stim, dict_key):
 
 def practice(stim, dict_key, condition):
     img, imgzoomin, imgzoomout = fixation_preparation_phase(stim = stim, dict_key = dict_key)
+    #print(clock_two.getTime()) # timing check
     win.flip()
+    #print(clock_two.getTime())  #timing check
     key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
     if key == "w":
         imgzoomin.draw()
@@ -86,9 +89,13 @@ def practice(stim, dict_key, condition):
 
 def trial(stim, dict_key, condition):
     img, imgzoomin, imgzoomout = fixation_preparation_phase(stim = stim, dict_key = dict_key)
+    #print(clock_two.getTime()) # timing check
     win.callOnFlip(clock.reset)
     win.flip()
+    #print(clock.getTime()) # timing check
+    #print(clock_two.getTime()) # timing check
     key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
+    #print(clock.getTime()) # timing check
     if key == "w":
         imgzoomin.draw()
     if key == "s":
@@ -211,7 +218,7 @@ shuffle(stimuli_order)
 m = monitors.Monitor("test", width=28.8, distance=90, autoLog=True)
 win = visual.Window(size = (1024,800),monitor=m, units='pix', winType='pyglet', color=-.5,fullscr=True) #Window Attribut aus visual aus psychopy erstellt hier ein Window, das zur Darstellung benutzt wird mit dem Objektnamen win
 clock = core.Clock() #stopwatch
-
+#clock_two = core.Clock() # timing testing
 
 ##-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 ##-#-#-# START EXPERIMENTAL PROCEDURE  #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
