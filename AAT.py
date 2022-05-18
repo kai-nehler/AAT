@@ -183,15 +183,15 @@ practice_image_array = []
 for i in range(1,7):
     practice_image_array.append("practice" + str(i)+ ".jpg")
 
-for i in range(1,7):
+for i in range(1,24):
     neg_image_array.append("internet" + str(i)+ ".jpg")
     neutral_image_array.append("neutral" + str(i)+ ".jpg")
 
 tilt_practice = sample(practice_image_array, 3)
 straight_practice = list(set(practice_image_array).difference(tilt_practice))
 
-tilt = sample(neutral_image_array, 3)
-tilt.extend(sample(neg_image_array, 3))
+tilt = sample(neutral_image_array, 12)
+tilt.extend(sample(neg_image_array, 12))
 straight = list(set(neutral_image_array).difference(tilt))
 straight.extend(set(neg_image_array).difference(tilt))
 
@@ -207,10 +207,10 @@ practice_order = list(iter(practice_dict))
 shuffle(practice_order)
 
 reference_dict = {}
-for i in range (0,6):
+for i in range (0,23):
   reference_dict_key = "st" + str(i+1)
   reference_dict[reference_dict_key] = straight[i]
-for i in range (0,6):
+for i in range (0,23):
   reference_dict_key = "ti" + str(i+1)
   reference_dict[reference_dict_key] = tilt[i]
 
