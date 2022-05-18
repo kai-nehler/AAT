@@ -114,12 +114,18 @@ welcome = """Willkommen zu unserem Experiment!
 Hierbei geht es um die Annäherung oder das Entfernen von visuellen Stimuli.
 Das Experiment ist in zwei Durchgänge aufgeteilt, durch die Sie vom Programm geführt werden.
 
-Drücken Sie ENTER um fortzufahren...
+Drücken Sie ENTER, um fortzufahren...
 """
 
 code_generation = """
 An dieser Stelle gibt die Versuchsleitung den
 anonymisierten Proband:innen Code ein.
+"""
+
+double = """
+Eine Datei mit diesem Code liegt bereits vor. Bitte geben Sie einen einzigartigen Code ein.
+
+Drücken Sie ENTER, um einen neuen Code einzugeben...
 """
 
 feedback = """
@@ -136,7 +142,7 @@ Wenn das Bild {} ist, sollen Sie sich annähern. Dies erreichen Sie durch Drück
 Antworten Sie so schnell und genau wie möglich. Sowohl die Korrrektheit als auch die Reaktionszeit werden gemessen. In den Trainingsdurchgängen erhalten Sie Feedback zu Ihrer Antwort.
 
 
-Drücken Sie ENTER um beginnen...
+Drücken Sie ENTER, um zu beginnen...
 """
 
 approach_trials = """
@@ -146,7 +152,7 @@ Denken Sie daran, dass sie gelernt haben, dass sie sich annähern sollen, wenn d
 
 Sie werden in dieser Phase kein Feedback zu Ihren Antworten erhalten. Das nächste Bild wird also automatisch erscheinen!
 
-Drücken Sie ENTER um beginnen...
+Drücken Sie ENTER, um zu beginnen...
 """
 
 intermediate = """
@@ -154,7 +160,7 @@ Der erste Durchgang ist geschafft. Nehmen Sie sich einen Moment Zeit und einen S
 
 Wenn Sie bereit sind, starten Sie in den zweiten Durchgang. In diesem sollen Sie auf die visuellen Stimuli die entgegengesetzte Reaktion zeigen.
 
-Drücken Sie ENTER um fortzufahren...
+Drücken Sie ENTER, um fortzufahren...
 """
 
 goodbye = """Der zweite Durchgang ist abgeschlossen!
@@ -231,7 +237,16 @@ shuffle(conditions)                                                       # rand
 
 show_text(welcome)
 
+
 subject_ID = code_generator(msg = code_generation)
+
+
+while True:
+    if os.path.exists("../data/subject_" + subject_ID + ".csv"):
+        show_text(double)
+        subject_ID = code_generator(msg = code_generation)
+    else:
+        break
 
 filename = "subject_" + subject_ID + ".csv"
 with open(filename, "w") as f:                                                              # set up file for data
