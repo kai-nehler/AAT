@@ -46,14 +46,14 @@ def fixation_preparation_phase(stim, dict_key):
     clock.reset()
     #clock_two.reset() #Timing Testing
     if "st" in dict_key:
-        imgzoomin = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1400,970))
-        imgzoomout = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1000,630))
-        img = visual.ImageStim(win, image = stim, pos = (0, 0), size = (1200, 800))
+        imgzoomin = visual.ImageStim(win, image = stim, pos = (0, 0), size = (875,606.25))
+        imgzoomout = visual.ImageStim(win, image = stim, pos = (0, 0), size = (450,283.5))
+        img = visual.ImageStim(win, image = stim, pos = (0, 0), size = (600, 400))
         img.draw()
     if "ti" in dict_key:
-        imgzoomin = visual.ImageStim(win, ori = 1, image = stim, pos = (0, 0), size = (1400,970))
-        imgzoomout = visual.ImageStim(win, ori = 1, image = stim, pos = (0, 0), size = (1000,630))
-        img = visual.ImageStim(win, ori = 1, image = stim, pos = (0, 0), size = (1200, 800))
+        imgzoomin = visual.ImageStim(win, ori = 2, image = stim, pos = (0, 0), size = (875,606.25))
+        imgzoomout = visual.ImageStim(win, ori = 2, image = stim, pos = (0, 0), size = (450,283.5))
+        img = visual.ImageStim(win, ori = 2, image = stim, pos = (0, 0), size = (600, 400))
         img.draw()
     while True:                         # check timing after preperation of stimulie
         if clock.getTime() <= 1.5:      # preperation should take less than this time
@@ -68,11 +68,13 @@ def practice(stim, dict_key, condition):
     #print(clock_two.getTime()) # timing check
     win.flip()
     #print(clock_two.getTime())  #timing check
-    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
+    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s","escape"))[0]
     if key == "w":
         imgzoomin.draw()
     if key == "s":
         imgzoomout.draw()
+    if (key == "escape"):
+        core.quit() #from psychopy lib will exit Python
     win.flip()
     event.waitKeys(keyList=("return"), maxWait = 1.5)
     if condition == "straightapproach":
@@ -94,12 +96,14 @@ def trial(stim, dict_key, condition):
     win.flip()
     #print(clock.getTime()) # timing check
     #print(clock_two.getTime()) # timing check
-    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
+    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s", "escape"))[0]
     #print(clock.getTime()) # timing check
     if key == "w":
         imgzoomin.draw()
     if key == "s":
         imgzoomout.draw()
+    if (key == "escape"):
+        core.quit() #from psychopy lib will exit Python
     win.flip()
     with open(filename, "a") as f:
         print(dict_key,stim,key,rt,condition,subject_ID, sep=",", file=f)
@@ -111,7 +115,7 @@ def trial(stim, dict_key, condition):
 #######################
 
 welcome = """Willkommen zu unserem Experiment!
-Hierbei geht es um die Annäherung oder das Entfernen von visuellen Stimuli.
+Hierbei geht es darum, sich auf Bilder zu oder von ihnen weg zu bewegen.
 Das Experiment ist in zwei Durchgänge aufgeteilt, durch die Sie vom Programm geführt werden.
 
 Drücken Sie ENTER, um fortzufahren...
@@ -158,7 +162,7 @@ Drücken Sie ENTER, um zu beginnen...
 intermediate = """
 Der erste Durchgang ist geschafft. Nehmen Sie sich einen Moment Zeit und einen Schluck Wasser.
 
-Wenn Sie bereit sind, starten Sie in den zweiten Durchgang. In diesem sollen Sie auf die visuellen Stimuli die entgegengesetzte Reaktion zeigen.
+Wenn Sie bereit sind, starten Sie in den zweiten Durchgang - zunächst mit einem Probedurchlauf.
 
 Drücken Sie ENTER, um fortzufahren...
 """
