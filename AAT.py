@@ -68,13 +68,11 @@ def practice(stim, dict_key, condition):
     #print(clock_two.getTime()) # timing check
     win.flip()
     #print(clock_two.getTime())  #timing check
-    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s","escape"))[0]
+    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
     if key == "w":
         imgzoomin.draw()
     if key == "s":
         imgzoomout.draw()
-    if (key == "escape"):
-        core.quit() #from psychopy lib will exit Python
     win.flip()
     event.waitKeys(keyList=("return"), maxWait = 1.5)
     if condition == "straightapproach":
@@ -96,14 +94,12 @@ def trial(stim, dict_key, condition):
     win.flip()
     #print(clock.getTime()) # timing check
     #print(clock_two.getTime()) # timing check
-    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s", "escape"))[0]
+    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
     #print(clock.getTime()) # timing check
     if key == "w":
         imgzoomin.draw()
     if key == "s":
         imgzoomout.draw()
-    if (key == "escape"):
-        core.quit() #from psychopy lib will exit Python
     win.flip()
     with open(filename, "a") as f:
         print(dict_key,stim,key,rt,condition,subject_ID, sep=",", file=f)
@@ -229,6 +225,7 @@ m = monitors.Monitor("test", width=28.8, distance=90, autoLog=True)
 win = visual.Window(size = (1024,800),monitor=m, units='pix', winType='pyglet', color=-.5,fullscr=True) #Window Attribut aus visual aus psychopy erstellt hier ein Window, das zur Darstellung benutzt wird mit dem Objektnamen win
 clock = core.Clock() #stopwatch
 #clock_two = core.Clock() # timing testing
+event.globalKeys.add(key="escape", func=core.quit)
 
 ##-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
 ##-#-#-# START EXPERIMENTAL PROCEDURE  #-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#-#
