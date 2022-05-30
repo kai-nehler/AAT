@@ -68,20 +68,20 @@ def practice(stim, dict_key, condition):
     #print(clock_two.getTime()) # timing check
     win.flip()
     #print(clock_two.getTime())  #timing check
-    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
-    if key == "w":
+    key, rt = event.waitKeys(timeStamped = clock, keyList=("up","down"))[0]
+    if key == "up":
         imgzoomin.draw()
-    if key == "s":
+    if key == "down":
         imgzoomout.draw()
     win.flip()
     event.waitKeys(keyList=("return"), maxWait = 1.5)
     if condition == "straightapproach":
-        if (key == "w" and "st" in dict_key) or (key =="s" and "ti" in dict_key):
+        if (key == "up" and "st" in dict_key) or (key =="down" and "ti" in dict_key):
             show_text(text = feedback.format("korrekt"))
         else:
             show_text(text = feedback.format("nicht korrekt"))
     else:
-        if (key == "w" and "st" in dict_key) or (key =="s" and "ti" in dict_key):
+        if (key == "up" and "st" in dict_key) or (key =="down" and "ti" in dict_key):
             show_text(text = feedback.format("nicht korrekt"))
         else:
             show_text(text = feedback.format("korrekt"))
@@ -94,11 +94,11 @@ def trial(stim, dict_key, condition):
     win.flip()
     #print(clock.getTime()) # timing check
     #print(clock_two.getTime()) # timing check
-    key, rt = event.waitKeys(timeStamped = clock, keyList=("w","s"))[0]
+    key, rt = event.waitKeys(timeStamped = clock, keyList=("up","down"))[0]
     #print(clock.getTime()) # timing check
-    if key == "w":
+    if key == "up":
         imgzoomin.draw()
-    if key == "s":
+    if key == "down":
         imgzoomout.draw()
     win.flip()
     with open(filename, "a") as f:
@@ -110,11 +110,11 @@ def trial(stim, dict_key, condition):
 #### TEXT ELEMENTS ####
 #######################
 
-welcome = """Willkommen zu unserem Experiment!
-Hierbei geht es darum, sich auf Bilder zu oder von ihnen weg zu bewegen.
-Das Experiment ist in zwei Durchgänge aufgeteilt, durch die Sie vom Programm geführt werden.
+welcome = """Willkommen!
+In diesem Experiment geht es darum, sich auf Bilder zu oder von ihnen weg zu bewegen.
+Das Experiment ist in zwei Durchgänge aufgeteilt, durch die du vom Programm geführt wirst.
 
-Drücken Sie ENTER, um fortzufahren...
+Drücke ENTER, um fortzufahren...
 """
 
 code_generation = """
@@ -125,48 +125,50 @@ anonymisierten Proband:innen Code ein.
 double = """
 Eine Datei mit diesem Code liegt bereits vor. Bitte geben Sie einen einzigartigen Code ein.
 
-Drücken Sie ENTER, um einen neuen Code einzugeben...
+Drücke ENTER, um einen neuen Code einzugeben...
 """
 
 feedback = """
 Die gegebene Antwort war {}!
 
-Drücken Sie ENTER, um fortzufahren...
+Drücke ENTER, um fortzufahren...
 """
 
 approach_practice = """
-Im Folgendenen werden ihnen Trainingsdurchgänge präsentiert.
+Im Folgendenen werden Trainingsdurchgänge präsentiert.
 
-Wenn das Bild {} ist, sollen Sie sich annähern. Dies erreichen Sie durch Drücken der Taste W. Wenn das Bild hingegen {} ist, sollen Sie sich entfernen. Dies erreichen Sie durch Drücken der Taste S.
+Wenn das Bild {} ist, sollst du auf das Bild zugehen. Das erreichst du durch die Pfeiltaste nach oben. Wenn das Bild hingegen {} ist, sollst du dich von dem Bild weg bewegen. Das erreichst mit der Pfeiltaste nach unten.
 
-Antworten Sie so schnell und genau wie möglich. Sowohl die Korrrektheit als auch die Reaktionszeit werden gemessen. In den Trainingsdurchgängen erhalten Sie Feedback zu Ihrer Antwort.
+Antworte bitte so schnell und genau wie möglich. Sowohl die Korrrektheit als auch die Reaktionszeit werden gemessen. In den Trainingsdurchgängen gibt es Feedback zur Reaktion, in den eigentlichen Durchgängen aber nicht mehr.
 
 
-Drücken Sie ENTER, um zu beginnen...
+Drücke ENTER, um zu beginnen...
 """
 
 approach_trials = """
 Die Trainingsdurchgänge sind geschafft. Nun geht es in die Testphase.
 
-Denken Sie daran, dass sie gelernt haben, dass sie sich annähern sollen, wenn das Bild {} ist. Dies erreichen Sie durch Drücken der Taste W. Wenn das Bild hingegen {} ist, sollen Sie sich entfernen. Dies erreichen Sie durch Drücken der Taste S.
+Bitte denk daran, dass du dich auf das Bild zu bewegen sollst, wenn das Bild {} ist. Das machst du mit der Pfeiltaste nach oben. 
 
-Sie werden in dieser Phase kein Feedback zu Ihren Antworten erhalten. Das nächste Bild wird also automatisch erscheinen!
+Wenn das Bild hingegen {} ist, sollst du dich vom Bild weg bewegen. Das geht mit der Pfeiltaste nach unten.
 
-Drücken Sie ENTER, um zu beginnen...
+In dieser Phase wird es kein Feedback geben - das nächste Bild wird also automatisch erscheinen!
+
+Drücke ENTER, um zu beginnen...
 """
 
 intermediate = """
-Der erste Durchgang ist geschafft. Nehmen Sie sich einen Moment Zeit und einen Schluck Wasser.
+Der erste Durchgang ist geschafft. Nimm dir einen Moment Zeit und einen Schluck Wasser.
 
-Wenn Sie bereit sind, starten Sie in den zweiten Durchgang - zunächst mit einem Probedurchlauf.
+Wenn du bereit bist, starte in den zweiten Durchgang - zunächst wieder mit einem Probedurchlauf.
 
-Drücken Sie ENTER, um fortzufahren...
+Drücke ENTER, um fortzufahren...
 """
 
 goodbye = """Der zweite Durchgang ist abgeschlossen!
-Vielen Dank für Ihre Teilnahme. Beenden Sie das Programm und informieren Sie die Versuchsleitung.
+Vielen Dank für die Teilnahme! Beende das Programm und sage der Versuchsleitung Bescheid.
 
-Drücken Sie ENTER zum Beenden...
+Drücke ENTER zum Beenden...
 """
 
 ####################################################################
